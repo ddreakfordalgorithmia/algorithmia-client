@@ -3,6 +3,7 @@ import Algorithmia
 import sys
 import os
 from cca_param_handler import processCmdLine
+import random
 
 usageMsg = f"cca_client.py [--approved=true] [--approval_rate=75]"
 
@@ -74,6 +75,9 @@ inputDenied = {
   "marital_widow": 0
 }
 
+inputs = [inputApproved, inputDenied]
+inputIdxs = [0,1]
+ 
 # Request a single approval/denial.
 def getApproval(approvable):
     print(f"getApproval({approvable})...")
@@ -87,7 +91,12 @@ def getApproval(approvable):
 # Generate the specified approval rate by continously requesting
 # approvals.
 def genApprovalRate(approvalRate):
-    print(f"getApprovalRate({approvalRate})...")
+    print(f"genApprovalRate({approvalRate})...")
+    inputSample = random.choices(inputIdxs, cum_weights=(approvalRate,100), k=100)
+    print(f"Sample of input indexes [0=Approved, 1=Denied]: {inputSample}")
+    for sampleIdx in inputSample:
+        print(algo.pipe(inputs[sampleIdx]).result)
+        
     return
 
 # Command line entry point
@@ -101,6 +110,7 @@ if __name__ == "__main__":
     if 'approved' in paramDict.keys():
         getApproval(paramDict['approved'])
     elif 'approval_rate' in paramDict.keys():
-        genApprovalRate(paramDict['approval_rate'])
+        while True:
+            genApprovalRate(paramDict['approval_rate'])
 
     exit(0)
