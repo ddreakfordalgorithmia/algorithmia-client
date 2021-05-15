@@ -21,5 +21,5 @@ algo.set_options(timeout=300) # optional
 result = algo.pipe(X_test.to_json()).result
 print(f"\nPredictions:")
 print(json.dumps(result['predictions'], indent=2))
-print(f"\n\nModel metadata:")
+print(f"\nModel metadata:")
 print(json.dumps(result['model_metadata'], indent=2))
