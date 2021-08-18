@@ -5,10 +5,16 @@ import os
 from cca_param_handler import processCmdLine
 import random
 
+# Before running this, set the following
+# Algorithmia API
+# set -x ALGORITHMIA_API 'https://api.algosales.productionize.ai'
+# set -x ALGORITHMIA_API_KEY '...'
+
 usageMsg = f"cca_client.py [--approved=true] [--approval_rate=75]"
 
 client = Algorithmia.client(os.getenv('ALGORITHMIA_API_KEY'), os.getenv('ALGORITHMIA_API'))
-algo = client.algo('algorithmia_se/CreditCardApproval/1.0.8')
+algo_ref = f"{os.getenv('ALGORITHMIA_ORG')}/CreditCardApproval/4.3.4"
+algo = client.algo(algo_ref)
 algo.set_options(timeout=300)
 
 inputApproved = {
