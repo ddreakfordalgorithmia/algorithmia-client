@@ -9,11 +9,16 @@ import random
 # Algorithmia API
 # set -x ALGORITHMIA_API 'https://api.algosales.productionize.ai'
 # set -x ALGORITHMIA_API_KEY '...'
-
-usageMsg = f"cca_client.py [--approved=true] [--approval_rate=75]"
+#
+algo_endpoint = os.environ.get('ALGORITHMIA_API')
+if not algo_endpoint:
+    raise SystemExit('Please set the environment variable ALGORITHMIA_API (e.g. https://api.algosales.productionize.ai)')
+api_key = os.environ.get('ALGORITHMIA_API_KEY')
+if not api_key:
+    raise SystemExit('Please set the environment variable ALGORITHMIA_API_KEY (key must have permission to manage algorithms)')
 
 client = Algorithmia.client(os.getenv('ALGORITHMIA_API_KEY'), os.getenv('ALGORITHMIA_API'))
-algo_ref = f"{os.getenv('ALGORITHMIA_ORG')}/CreditCardApproval/4.3.4"
+algo_ref = f"{os.getenv('ALGORITHMIA_ORG')}/CreditCardApproval/4.3.5"
 algo = client.algo(algo_ref)
 algo.set_options(timeout=300)
 
@@ -108,6 +113,7 @@ def genApprovalRate(approvalRate):
 # Command line entry point
 if __name__ == "__main__":
 
+    usageMsg = f"cca_client.py [--approved=true] [--approval_rate=75]"
     if len(sys.argv) == 1:
         print(usageMsg)
         sys.exit(1)
